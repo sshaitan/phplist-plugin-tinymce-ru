@@ -56,7 +56,7 @@ END;
         return $html;
     }
 
-    private function editorScript($fieldname, $width, $height, $toolbar)
+    private function editorScript($fieldname, $height, $toolbar)
     {
         $html = '';
         $tinymceUrl = getConfig('tinymce_url');
@@ -96,9 +96,6 @@ END;
         if ($config) {
             $settings[] = trim(trim($config), ',');
         }
-        if ($width) {
-            $settings[] = "width: $width";
-        }
 
         if ($height) {
             $settings[] = "height: $height";
@@ -131,6 +128,8 @@ settings = {
     file_browser_callback: elFinderBrowser,
     relative_urls: false,
     remove_script_host: false,
+    language: 'ru',
+    resize: 'both',
     $configSettings
 };
 $fullPageSetting
@@ -180,15 +179,6 @@ END;
               'description' => 'Custom configuration settings',
               'type' => 'textarea',
               'allowempty' => 1,
-              'category' => 'TinyMCE',
-            ),
-            'tinymce_width' => array(
-              'value' => 600,
-              'description' => 'Width in px of TinyMCE window',
-              'type' => 'integer',
-              'allowempty' => 0,
-              'min' => 100,
-              'max' => 800,
               'category' => 'TinyMCE',
             ),
             'tinymce_height' => array(
@@ -255,17 +245,16 @@ END;
 
     public function editor($fieldname, $content)
     {
-        $width = getConfig('tinymce_width');
         $height = getConfig('tinymce_height');
 
-        return $this->createEditor($fieldname, $content, $width, $height);
+        return $this->createEditor($fieldname, $content, $height);
     }
 
-    public function createEditor($fieldname, $content, $width = null, $height = null, $toolbar = null)
+    public function createEditor($fieldname, $content, $height = null, $toolbar = null)
     {
         $fieldname = htmlspecialchars($fieldname);
         $content = htmlspecialchars($content);
-        $html = $this->editorScript($fieldname, $width, $height, $toolbar) . <<<END
+        $html = $this->editorScript($fieldname, $height, $toolbar) . <<<END
 <textarea class="editable" name="$fieldname">$content</textarea>
 END;
 
